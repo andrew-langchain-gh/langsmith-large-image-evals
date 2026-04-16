@@ -1,19 +1,26 @@
 # Multimodal Image Evaluation with LangSmith
 
-Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal image descriptions using an LLM-as-judge. Compares two approaches for sending large images (4-5 MB) to Claude.
+Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal image descriptions using an LLM-as-judge. Two scripts, two datasets, two size regimes:
+
+- **`small_images.py`** — small/medium images (3.5–5.2 MB). Runs both the presigned-URL and Files API approaches side by side.
+- **`large_images.py`** — large images (>10 MB, ~20 MB each). Runs only the Files API approach; presigned URLs can't handle images above Claude's ~5 MB URL limit.
 
 ## Project Structure
 
 ```
 .
-├── main.py           # Script: dataset creation + both experiments end-to-end
-├── notebook.ipynb    # Notebook: same logic, cell-by-cell for interactive use
-├── images/           # 5 high-resolution JPEG images (3.5-5.2 MB each)
-│   ├── city_skyline.jpg
-│   ├── desert_sunset.jpg
-│   ├── forest_trail.jpg
-│   ├── mountain_landscape.jpg
-│   └── ocean_waves.jpg
+├── small_images.py        # Small-image script: both experiments end-to-end
+├── large_images.py        # Large-image script: Files API experiment only
+├── notebook.ipynb         # Notebook: same logic as large_images.py, cell-by-cell
+├── images/                # Source images
+│   ├── city_skyline.jpg       # 5.2 MB
+│   ├── desert_sunset.jpg      # 5.2 MB
+│   ├── forest_trail.jpg       # 4.2 MB
+│   ├── mountain_landscape.jpg # 4.7 MB
+│   ├── ocean_waves.jpg        # 3.5 MB
+│   ├── huge_nebula.png        # 20.3 MB
+│   ├── huge_canyon.png        # 20.7 MB
+│   └── huge_reef.png          # 21.9 MB
 ├── pyproject.toml
 ├── .env.example
 └── README.md
@@ -43,17 +50,33 @@ cp .env.example .env
 
 ## Usage
 
-### Script
+### Small/medium images (`small_images.py`)
 
 ```bash
-uv run python main.py
+uv run python small_images.py
 ```
 
-Runs both experiments sequentially and prints results to stdout.
+Creates the `multimodal-image-descriptions` dataset from the five JPEGs and runs both experiments sequentially:
+
+1. **`image-eval-presigned-url`** — Claude reads the LangSmith-provided presigned URL directly. Works because each JPEG is under the ~5 MB URL limit.
+2. **`image-eval-files-api`** — Each image is uploaded to Anthropic's Files API and referenced by `file_id`.
+
+### Large images (`large_images.py`)
+
+```bash
+uv run python large_images.py
+```
+
+Creates a separate `multimodal-large-image-descriptions` dataset from the three ~20 MB PNGs and runs only the Files API experiment (`large-image-eval-files-api`). The presigned-URL approach is skipped because Claude rejects URL-referenced images above ~5 MB.
+
+Two size caps matter here:
+
+- **LangSmith Cloud: 25 MB per request.** `create_examples` is called one example at a time, since three 20 MB attachments in a single call would exceed the cap (and CloudFront returns `403` instead of `413`).
+- **Claude Files API: 500 MB per file.** Plenty of headroom for images up to that size.
 
 ### Notebook
 
-Open `notebook.ipynb` in Jupyter. Cells are designed to run top-to-bottom, or you can run individual experiments selectively.
+Open `notebook.ipynb` in Jupyter. Cells mirror `large_images.py` (large-image workflow only) and are designed to run top-to-bottom.
 
 ## How It Works
 
