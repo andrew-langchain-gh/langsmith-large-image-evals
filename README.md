@@ -30,6 +30,15 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 
 Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
 
+[Git LFS](https://git-lfs.com/) is required to clone this repo — the ~20 MB PNGs under `images/` are stored via LFS. Without it, those files will appear as small text pointer files instead of the actual images. On macOS:
+
+```bash
+brew install git-lfs
+git lfs install  # one-time per-user setup
+```
+
+Then clone (or `git lfs pull` if you already cloned without LFS), and install Python deps:
+
 ```bash
 uv sync
 ```
