@@ -18,9 +18,9 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 │   ├── forest_trail.jpg       # 4.2 MB
 │   ├── mountain_landscape.jpg # 4.7 MB
 │   ├── ocean_waves.jpg        # 3.5 MB
-│   ├── huge_nebula.png        # 20.3 MB
-│   ├── huge_canyon.png        # 20.7 MB
-│   └── huge_reef.png          # 21.9 MB
+│   ├── huge_nebula.png        # 15.6 MiB
+│   ├── huge_canyon.png        # 16.5 MiB
+│   └── huge_reef.png          # 16.9 MiB
 ├── pyproject.toml
 ├── .env.example
 └── README.md
@@ -30,14 +30,28 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 
 Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
 
-[Git LFS](https://git-lfs.com/) is required to clone this repo — the ~20 MB PNGs under `images/` are stored via LFS. Without it, those files will appear as small text pointer files instead of the actual images. On macOS:
+[Git LFS](https://git-lfs.com/) is required to clone this repo — the ~20 MB PNGs under `images/` are stored via LFS. Without it, those files will appear as small (~133 byte) text pointer files instead of the actual images, and `large_images.py` will fail with a `Could not process image` 400 from the Anthropic API.
+
+Install Git LFS (one-time, per-user):
 
 ```bash
 brew install git-lfs
-git lfs install  # one-time per-user setup
+git lfs install
 ```
 
-Then clone (or `git lfs pull` if you already cloned without LFS), and install Python deps:
+If you are cloning fresh, the LFS blobs will be fetched automatically. If you already cloned without LFS, pull them now:
+
+```bash
+git lfs pull
+```
+
+Verify the PNGs are real (each should be ~20 MB, not 133 B):
+
+```bash
+ls -lh images/huge_*.png
+```
+
+Then install Python deps:
 
 ```bash
 uv sync
@@ -80,7 +94,9 @@ Creates a separate `multimodal-large-image-descriptions` dataset from the three 
 
 Two size caps matter here:
 
-- **LangSmith Cloud: 25 MB per request.** `create_examples` is called one example at a time, since three 20 MB attachments in a single call would exceed the cap (and CloudFront returns `403` instead of `413`).
+- **LangSmith Cloud: keep each request under 20,000,000 bytes.** The documented cap is 20 MiB (20,971,520 B), but the langsmith client's internal `_batch_examples_by_size` threshold is 20,000,000 bytes and the server's real behavior changes around the same number. `create_examples` is called one example at a time so each request carries a single attachment. Two failure modes to know about:
+  - **Well over the cap** → `LangSmithConnectionError` citing `content length … exceeds the maximum size limit`. Loud, easy to debug.
+  - **Just over the client's 20 MB threshold** → server returns HTTP 200 with `{"count": 0, "example_ids": []}` and silently drops the example. No exception raised. The script guards against this by checking the response `count` and raising if it isn't 1.
 - **Claude Files API: 500 MB per file.** Plenty of headroom for images up to that size.
 
 ### Notebook

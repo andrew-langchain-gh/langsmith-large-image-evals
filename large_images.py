@@ -52,14 +52,19 @@ def create_dataset(ls_client: Client) -> str:
     )
     print(f"Created dataset: {DATASET_NAME} (id={dataset.id})")
 
-    # LangSmith Cloud enforces a 25 MB per-request payload cap (CloudFront returns 403).
-    # Each of these PNGs is ~20 MB, so upload one example per request.
+    # LangSmith Cloud's documented cap is 20 MiB (20,971,520 B), but the
+    # effective reliable threshold is 20,000,000 bytes — it matches the langsmith
+    # client's own `_batch_examples_by_size` limit. Requests above that either get
+    # rejected outright (LangSmithConnectionError, "exceeds the maximum size limit")
+    # or, more insidiously, get a 200 response with count=0, example_ids=[] and
+    # the example is silently dropped. Keep each PNG comfortably under 20 MB and
+    # upload one example per request.
     for ex in EXAMPLES:
         image_path = IMAGES_DIR / ex["image_file"]
         image_bytes = image_path.read_bytes()
         print(f"  Adding example: {ex['image_file']} ({len(image_bytes) / 1024 / 1024:.1f} MB)")
 
-        ls_client.create_examples(
+        resp = ls_client.create_examples(
             dataset_id=dataset.id,
             examples=[{
                 "id": uuid.uuid4(),
@@ -78,6 +83,13 @@ def create_dataset(ls_client: Client) -> str:
                 },
             }],
         )
+        # Guard against the silent-drop failure mode: server returns 200 with
+        # count=0 when the request just barely exceeds its internal threshold.
+        if (resp.get("count") if isinstance(resp, dict) else resp.count) != 1:
+            raise RuntimeError(
+                f"create_examples returned {resp} for {ex['image_file']} "
+                f"({len(image_bytes)} bytes); example was not persisted."
+            )
 
     print(f"Added {len(EXAMPLES)} examples with image attachments")
     return dataset.id
