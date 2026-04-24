@@ -18,9 +18,9 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 │   ├── forest_trail.jpg       # 4.2 MB
 │   ├── mountain_landscape.jpg # 4.7 MB
 │   ├── ocean_waves.jpg        # 3.5 MB
-│   ├── huge_nebula.png        # 15.6 MiB
-│   ├── huge_canyon.png        # 16.5 MiB
-│   └── huge_reef.png          # 16.9 MiB
+│   ├── huge_nebula.png        # 18.6 MB — JWST Cosmic Cliffs (Carina Nebula), public domain (NASA/ESA/CSA/STScI)
+│   ├── huge_canyon.png        # 18.6 MB — Grand Canyon, CC0 (Wikimedia Commons: "Down_the_Grand_Canyon.jpg")
+│   └── huge_reef.png          # 15.5 MB — Coral reef, CC BY-SA 4.0 (Wikimedia Commons: "Colorful_Corals.jpg")
 ├── pyproject.toml
 ├── .env.example
 └── README.md
