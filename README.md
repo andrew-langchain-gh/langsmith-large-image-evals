@@ -26,6 +26,14 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 └── README.md
 ```
 
+## Image Credits
+
+The three large-image fixtures under `images/` are reused from public sources. Each has been resized and re-encoded as PNG for this repo:
+
+- **`huge_nebula.png`** — *"Cosmic Cliffs" in the Carina Nebula (NIRCam Image)*, [NASA, ESA, CSA, STScI](https://esawebb.org/images/weic2205a/). Public domain.
+- **`huge_canyon.png`** — *Down the Grand Canyon*, Wikimedia Commons: [File:Down_the_Grand_Canyon.jpg](https://commons.wikimedia.org/wiki/File:Down_the_Grand_Canyon.jpg). Released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **`huge_reef.png`** — *Colorful Corals* by Unitarywheat, Wikimedia Commons: [File:Colorful_Corals.jpg](https://commons.wikimedia.org/wiki/File:Colorful_Corals.jpg). Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); this derivative (resized and re-encoded as PNG) is distributed under the same license.
+
 ## Setup
 
 Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
