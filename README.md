@@ -18,13 +18,21 @@ Demonstrates a LangSmith dataset and experiment flow that evaluates multimodal i
 │   ├── forest_trail.jpg       # 4.2 MB
 │   ├── mountain_landscape.jpg # 4.7 MB
 │   ├── ocean_waves.jpg        # 3.5 MB
-│   ├── huge_nebula.png        # 15.6 MiB
-│   ├── huge_canyon.png        # 16.5 MiB
-│   └── huge_reef.png          # 16.9 MiB
+│   ├── huge_nebula.png        # 18.6 MB — JWST Cosmic Cliffs (Carina Nebula), public domain (NASA/ESA/CSA/STScI)
+│   ├── huge_canyon.png        # 18.6 MB — Grand Canyon, CC0 (Wikimedia Commons: "Down_the_Grand_Canyon.jpg")
+│   └── huge_reef.png          # 15.5 MB — Coral reef, CC BY-SA 4.0 (Wikimedia Commons: "Colorful_Corals.jpg")
 ├── pyproject.toml
 ├── .env.example
 └── README.md
 ```
+
+## Image Credits
+
+The three large-image fixtures under `images/` are reused from public sources. Each has been resized and re-encoded as PNG for this repo:
+
+- **`huge_nebula.png`** — *"Cosmic Cliffs" in the Carina Nebula (NIRCam Image)*, [NASA, ESA, CSA, STScI](https://esawebb.org/images/weic2205a/). Public domain.
+- **`huge_canyon.png`** — *Down the Grand Canyon*, Wikimedia Commons: [File:Down_the_Grand_Canyon.jpg](https://commons.wikimedia.org/wiki/File:Down_the_Grand_Canyon.jpg). Released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **`huge_reef.png`** — *Colorful Corals* by Unitarywheat, Wikimedia Commons: [File:Colorful_Corals.jpg](https://commons.wikimedia.org/wiki/File:Colorful_Corals.jpg). Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); this derivative (resized and re-encoded as PNG) is distributed under the same license.
 
 ## Setup
 

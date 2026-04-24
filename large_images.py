@@ -22,17 +22,29 @@ EXAMPLES = [
     {
         "input": "Describe this image in detail.",
         "image_file": "huge_nebula.png",
-        "reference_output": "A large, high-resolution image with nebula-like texture and color variation.",
+        "reference_output": (
+            "A James Webb Space Telescope image of the 'Cosmic Cliffs' in the Carina Nebula (NGC 3324): "
+            "glowing orange and rust-colored ridges of gas and dust in the lower half, resembling a craggy "
+            "mountain range, with a deep blue starfield above dotted with countless stars, several of which "
+            "show prominent diffraction spikes characteristic of JWST."
+        ),
     },
     {
         "input": "What is the main subject of this image?",
         "image_file": "huge_canyon.png",
-        "reference_output": "A large, high-resolution canyon-like scene with varied terrain textures.",
+        "reference_output": (
+            "A towering canyon wall of layered sedimentary rock in reds, tans, and grays, viewed from a "
+            "dirt road or riverbed at its base under a partly cloudy blue sky."
+        ),
     },
     {
         "input": "Describe the colors and patterns in this image.",
         "image_file": "huge_reef.png",
-        "reference_output": "A large, high-resolution reef-like image with diverse colors and organic patterns.",
+        "reference_output": (
+            "A moody underwater coral reef scene in dim light: yellow-green and brown coral formations "
+            "with knobby, branching, and lumpy organic textures in the foreground, fading into deep navy "
+            "water in the background. The overall palette is muted and atmospheric rather than vibrant."
+        ),
     },
 ]
 
